@@ -1,0 +1,60 @@
+def compileSdkVersionValue = 29
+def buildToolsVersionValue = "29.0.2"
+project.ext{
+    compileSdkVersion = compileSdkVersionValue
+    buildToolsVersion = buildToolsVersionValue
+    minSdkVersion = 24
+    targetSdkVersion = 29
+    versionCode = 1
+    versionName = "1.0"
+    applicationId = "com.example.componentdemo"
+
+    // 设置App的配置
+    setAppDefaultConfig = {
+        extension ->
+            extension.apply plugin: 'com.android.application'
+            extension.description "app"
+            setAndroidConfig extension.android
+            setDependencies extension.dependencies
+    }
+
+    // 设置Lib的配置
+    setLibDefaultConfig = {
+        extension ->
+            extension.apply plugin: 'com.android.library'
+            extension.description "lib"
+            setAndroidConfig extension.android
+            setDependencies extension.dependencies
+    }
+
+    // 设置Android的配置
+    setAndroidConfig = {
+        extension ->
+            extension.compileSdkVersion compileSdkVersionValue
+            extension.buildToolsVersion buildToolsVersionValue
+
+            extension.defaultConfig {
+                minSdkVersion 24
+                targetSdkVersion 29
+
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+                javaCompileOptions {
+                    annotationProcessorOptions {
+                        arguments = [AROUTER_MODULE_NAME: extension.project.getName()]
+                    }
+                }
+            }
+
+            extension.dataBinding{
+                enabled = true
+            }
+    }
+
+    // 设置依赖
+    setDependencies = {
+        extension ->
+            extension.implementation fileTree(dir: 'libs', include: ['*.jar'])
+            extension.annotationProcessor 'com.alibaba:arouter-compiler:1.2.1'
+    }
+}

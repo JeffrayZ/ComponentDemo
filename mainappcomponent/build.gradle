@@ -1,0 +1,58 @@
+if(isRunMainApp){
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        if(isRunMainApp){
+            applicationId "com.example.mainappcomponent"
+        }
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        resourcePrefix "mainapp_"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a" , "arm64-v8a"
+            }
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a" , "arm64-v8a", "x86", "x86_64", "mips", "mips64"
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            // 1.单独调试与集成调试时使用不同的 AndroidManifest.xml 文件
+            // 我们还可以根据不同工程配置不同的 Java 源代码、不同的 resource 资源文件等的
+            if(isRunShoppingCenter.toBoolean()) {
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            } else{
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':baseLib')
+    runtimeOnly project(path: ':logincomponent')
+}

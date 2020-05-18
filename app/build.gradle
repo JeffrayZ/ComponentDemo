@@ -1,0 +1,68 @@
+apply from:"${rootProject.rootDir}/commons.gradle"
+project.ext.setAppDefaultConfig project
+
+android {
+//    compileSdkVersion project.ext.compileSdkVersion
+//    buildToolsVersion project.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId project.ext.applicationId
+//        minSdkVersion project.ext.minSdkVersion
+//        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
+        multiDexEnabled true
+
+//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            defaultConfig{
+                minSdkVersion 24
+            }
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a" , "arm64-v8a"
+            }
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            defaultConfig{
+                minSdkVersion 21
+            }
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a" , "arm64-v8a", "x86", "x86_64", "mips", "mips64"
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // =========================================== 采用 app_1 包下面开始 ==============================================
+//    if(!isRunMainApp.toBoolean()){
+//        runtimeOnly project(path: ':mainappcomponent')
+//    }
+//    if(!isRunShoppingCenter){
+//        runtimeOnly project(path: ':shoppingcentercomponent')
+//    }
+//    if(!isRunLogin){
+//        runtimeOnly project(path: ':logincomponent')
+//    }
+    // =========================================== 采用 app_1 包下面结束 ==============================================
+
+    // =========================================== 采用 app_2 包下面开始 ==============================================
+    if(!isRunMainApp.toBoolean()){
+        implementation project(path: ':mainappcomponent')
+    }
+    if(!isRunShoppingCenter){
+        implementation project(path: ':shoppingcentercomponent')
+    }
+    if(!isRunLogin){
+        implementation project(path: ':logincomponent')
+    }
+    // =========================================== 采用 app_2 包下面结束 ==============================================
+
+    implementation project(path: ':baseLib')
+}

@@ -1,0 +1,6 @@
+rootProject.name='ComponentDemo'
+include ':app'
+include ':baseLib'
+include ':logincomponent'
+include ':shoppingcentercomponent'
+include ':mainappcomponent'
